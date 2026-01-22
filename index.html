@@ -338,20 +338,25 @@
         .then(data => {
           clusterGroup.clearLayers();
 
-          data.forEach(p => {
-            if (!p.lat_deg || !p.lon_deg) return;
+          console.log('Loaded water points:', data.length, data[0]);
 
-            const marker = L.marker([p.lat_deg, p.lon_deg]);
+          data.forEach(p => {
+            const lat = p.lat_deg || p.lat || p.latitude;
+            const lon = p.lon_deg || p.lon || p.longitude;
+
+            if (!lat || !lon) return;
+
+            const marker = L.marker([lat, lon]);
             marker.bindPopup(`
-              <b>${p.water_source || 'Water Point'}</b><br>
-              Status: ${p.status_id || 'Unknown'}
+              <b>${p.water_source || p.type || 'Water source'}</b><br>
+              Status: ${p.status_id || p.status || 'Unknown'}
             `);
 
             clusterGroup.addLayer(marker);
           });
         })
         .catch(err => {
-          document.getElementById('mapNote').innerText = 'Unable to load water points. Please check your file or internet connection.';
+          document.getElementById('mapNote').innerText = 'Unable to load water points.';
           console.error(err);
         });
     }
