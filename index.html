@@ -341,8 +341,8 @@
           console.log('Loaded water points:', data.length, data[0]);
 
           data.forEach(p => {
-            const lat = p.lat_deg || p.lat || p.latitude;
-            const lon = p.lon_deg || p.lon || p.longitude;
+            const lat = p.#lat_deg || p.lat || p.latitude;
+            const lon = p.#lon_deg || p.lon || p.longitude;
 
             if (!lat || !lon) return;
 
