@@ -1,30 +1,39 @@
-const CACHE_NAME = 'majisafe-cache-v1';
+const CACHE_NAME = 'majisafe-v1';
+
 const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/sw.js',
-  '/waterpoints.json',
-  'https://unpkg.com/leaflet/dist/leaflet.css',
-  'https://unpkg.com/leaflet/dist/leaflet.js',
-  'https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css',
-  'https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css',
-  'https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js'
+  './',
+  './index.html',
+  './waterpoints.json',
+  './logo.png'
 ];
 
-self.addEventListener('install', (event) => {
+// Install
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('fetch', (event) => {
+// Activate
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.filter(k => k !== CACHE_NAME)
+            .map(k => caches.delete(k))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+// Fetch
+self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(cached => {
-      return cached || fetch(event.request).then(response => {
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
-        return response;
-      });
-    }).catch(() => caches.match('/index.html'))
+      return cached || fetch(event.request);
+    })
   );
 });
