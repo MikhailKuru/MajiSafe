@@ -1,431 +1,415 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MajiSafe Mozambique</title>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(180deg, #eef4fb, #f9fbfd);
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0a4fa3, #0dcaf0);
+      color: white;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .container {
+      padding: 1.2rem;
+      max-width: 680px;
+      margin: auto;
+    }
+
+    .logo {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 0.6rem;
+      display: block;
+      border-radius: 20px;
+      background: white;
+      padding: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      margin: 0.2rem 0 0.1rem;
+      font-size: 1.6rem;
+      letter-spacing: 0.4px;
+    }
+
+    p {
+      margin: 0.2rem 0 0.8rem;
+      font-size: 0.95rem;
+      color: #333;
+    }
+
+    header p {
+      color: rgba(255,255,255,0.92);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      background: #0a4fa3;
+      color: white;
+      border: none;
+      margin-top: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    button:hover {
+      background: #083b7a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+    }
+
+    .btn-water {
+      background: #0dcaf0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-top: 1rem;
+    }
+
+    .alert {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .alert.safe { background: #d4edda; color: #155724; }
+    .alert.warning { background: #fff3cd; color: #856404; }
+    .alert.danger { background: #f8d7da; color: #721c24; }
+
+    #map { height: 300px; margin-top: 1rem; border-radius: 12px; }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: #555;
+      background: #eef2f6;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 420px) {
+      .logo { width: 84px; height: 84px; }
+      h1 { font-size: 1.4rem; }
+    }
   </style>
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;MajiSafe Mozambique&lt;/title&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(180deg, #eef4fb, #f9fbfd);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #333;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>header {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(135deg, #0a4fa3, #0dcaf0);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1.2rem 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 2px 6px rgba(0,0,0,0.15);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1.2rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 680px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.logo {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 96px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height: 96px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0 auto 0.6rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 2px 8px rgba(0,0,0,0.15);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>h1 {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0.2rem 0 0.1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1.6rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing: 0.4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>p {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0.2rem 0 0.8rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.95rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #333;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>header p {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: rgba(255,255,255,0.92);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>label {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>input, select, button {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0.7rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 0.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: 1px solid #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>button {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #0a4fa3;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing: 0.2px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 2px 4px rgba(0,0,0,0.15);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transition: transform 0.1s ease, box-shadow 0.1s ease;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>button:hover {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #083b7a;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(-1px);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 4px 8px rgba(0,0,0,0.2);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn-secondary {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #6c757d;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.btn-water {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #0dcaf0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.card {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 2px 8px rgba(0,0,0,0.08);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.alert {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 1.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display: none;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.alert.safe { background: #d4edda; color: #155724; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.alert.warning { background: #fff3cd; color: #856404; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.alert.danger { background: #f8d7da; color: #721c24; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>#map { height: 300px; margin-top: 1rem; border-radius: 12px; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>footer {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 1rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size: 0.85rem;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color: #555;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #eef2f6;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top: 2rem;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width: 420px) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.logo { width: 84px; height: 84px; }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>h1 { font-size: 1.4rem; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Leaflet Map CSS --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" /&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;header&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;img class="logo" src="https://github.com/MikhailKuru/MajiSafe/blob/main/e05a94b8-24a4-4d73-8cd4-85845ae2080f%20(1).png?raw=true" alt="MajiSafe Mozambique Logo" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;h1&gt;MajiSafe Mozambique&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;p&gt;Disaster alerts, safe water &amp; conservation tips&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Home Screen --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="homeScreen" style="text-align:center;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Welcome to MajiSafe&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Check disaster risks or find the nearest drinkable water source.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="showForm()"&gt;Check Disaster Alerts&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-water" style="margin-top:0.7rem;" onclick="showWaterTips()"&gt;Ways to Conserve Water&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-water" style="margin-top:0.7rem;" onclick="showWaterMap()"&gt;Find Drinking Water&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Location Form --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="formScreen" style="display:none;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="province"&gt;Province&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="province"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value=""&gt;Select province&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="Cabo Delgado"&gt;Cabo Delgado&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="Nampula"&gt;Nampula&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="Zambezia"&gt;Zambézia&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="Sofala"&gt;Sofala&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="Inhambane"&gt;Inhambane&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="Gaza"&gt;Gaza&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="Maputo"&gt;Maputo&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;label for="district"&gt;District / City&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="text" id="district" placeholder="e.g. Beira, Pemba" /&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="checkRisk()"&gt;Check Risk&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-secondary" style="margin-top:0.5rem;" onclick="goHome()"&gt;Back&lt;/button&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="alertBox" class="alert"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Water Conservation Screen --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="waterScreen" style="display:none;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;💧 Ways to Conserve Water&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;li&gt;Fix leaking taps and pipes&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;li&gt;Collect rainwater for cleaning and gardening&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;li&gt;Turn off taps while brushing teeth&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;li&gt;Use buckets instead of hoses&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;li&gt;Reuse water from washing vegetables&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;li&gt;Water plants early morning or evening&lt;/li&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/ul&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-secondary" onclick="goHome()"&gt;Back&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Water Map Screen --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="mapScreen" style="display:none;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;🚰 Nearest Drinkable Water Sources&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p id="offlineText" style="display:none;"&gt;Offline mode: showing stored water points.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Showing sample water points (demo data).&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="map"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-secondary" onclick="goHome()"&gt;Back&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;footer&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&amp;copy; 2026 MajiSafe Mozambique | Offline-friendly</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/footer&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// App Screens</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function showForm() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('homeScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('waterScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('mapScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('formScreen').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function showWaterTips() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('homeScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('formScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('mapScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('waterScreen').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function showWaterMap() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('homeScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('formScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('waterScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('mapScreen').style.display = 'block';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!navigator.onLine) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('offlineText').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('offlineText').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>loadMap();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (map) map.invalidateSize();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, 200);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function goHome() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('formScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('waterScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('mapScreen').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('homeScreen').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (document.getElementById('alertBox')) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('alertBox').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Disaster Alerts (ReliefWeb API)</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const ALERT_STORAGE_KEY = 'majiSafe_alerts';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>async function checkRisk() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const province = document.getElementById('province').value;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const district = document.getElementById('district').value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const alertBox = document.getElementById('alertBox');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!province || !district) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>alert('Please enter your province and district');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>alertBox.style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>alertBox.className = 'alert warning';</p>
-<p class="p1"><span class="Apple-converted-space">      </span>alertBox.innerHTML = 'Checking live disaster alerts...';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const events = await fetchReliefWebEvents(province, district);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const risk = evaluateRisk(events);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (risk.level === 'danger') {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>alertBox.className = 'alert danger';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else if (risk.level === 'warning') {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>alertBox.className = 'alert warning';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>alertBox.className = 'alert safe';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>alertBox.innerHTML = risk.message;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Save for offline mode</p>
-<p class="p1"><span class="Apple-converted-space">        </span>localStorage.setItem(ALERT_STORAGE_KEY, JSON.stringify(events));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Push notification for new alerts</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (risk.level !== 'safe') {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>notifyUser(risk.message);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>} catch (e) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>alertBox.className = 'alert warning';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>alertBox.innerHTML = 'Unable to fetch live alerts. Showing cached data if available.';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const cached = localStorage.getItem(ALERT_STORAGE_KEY);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (cached) {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const events = JSON.parse(cached);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>const risk = evaluateRisk(events);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>alertBox.innerHTML = risk.message;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>async function fetchReliefWebEvents(province, district) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const url = `https://api.reliefweb.int/v1/reports?appname=majiSafe&amp;filter[field]=country&amp;filter[value]=Mozambique&amp;filter[field]=fields&amp;filter[value]=title&amp;filter[value]=description&amp;limit=20&amp;sort[]=date:desc`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const response = await fetch(url);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const data = await response.json();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>// Filter locally by province/district keywords</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const events = data.data || [];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const keyword = `${province} ${district}`.toLowerCase();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>return events.filter(e =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const title = (e.fields.title || '').toLowerCase();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const desc = (e.fields.description || '').toLowerCase();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return title.includes(keyword) || desc.includes(keyword);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function evaluateRisk(events) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!events || events.length === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return { level: 'safe', message: '✅ SAFE: No active disaster alerts found for your location.' };</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const eventNames = events.slice(0, 3).map(e =&gt; e.fields.title);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const message = `⚠️ ALERT: ${events.length} events found.\n\nTop alerts:\n- ${eventNames.join('\n- ')}`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>return { level: 'danger', message };</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Push Notifications</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>async function notifyUser(message) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (!("Notification" in window)) return;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (Notification.permission === "granted") {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>new Notification("MajiSafe Alert", { body: message });</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else if (Notification.permission !== "denied") {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const permission = await Notification.requestPermission();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (permission === "granted") {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>new Notification("MajiSafe Alert", { body: message });</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Leaflet Map</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let map;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>function loadMap() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (map) return;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>map = L.map('map').setView([-18.6657, 35.5296], 6);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>attribution: '© OpenStreetMap contributors'</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}).addTo(map);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>const waterPoints = [</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Public Borehole – Beira', lat: -19.8436, lon: 34.8389 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Water Point – Nampula', lat: -15.1165, lon: 39.2666 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Community Well – Maputo', lat: -25.9692, lon: 32.5732 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Protected Well – Chimoio', lat: -19.1164, lon: 33.4835 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Public Tap – Tete', lat: -16.1564, lon: 33.5867 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Borehole – Quelimane', lat: -17.8786, lon: 36.8883 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Community Water Point – Pemba', lat: -12.9740, lon: 40.5178 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Protected Spring – Lichinga', lat: -13.3120, lon: 35.2406 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Water Kiosk – Xai-Xai', lat: -25.0519, lon: 33.6442 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Standpipe – Inhambane', lat: -23.8439, lon: 35.3838 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Village Well – Mocímboa da Praia', lat: -11.3552, lon: 40.2438 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Rural Borehole – Massinga', lat: -23.9010, lon: 35.8958 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Tap Stand – Nacala', lat: -14.5150, lon: 40.6808 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Hand Pump – Manica', lat: -19.4875, lon: 33.4500 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Protected Dug Well – Tete Rural', lat: -16.1700, lon: 33.6500 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Community Borehole – Angoche', lat: -16.2325, lon: 39.9086 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Public Well – Gurúè', lat: -15.0126, lon: 36.9951 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Standpipe – Dondo', lat: -19.6093, lon: 34.7436 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Village Borehole – Milange', lat: -16.0974, lon: 35.7680 },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ name: 'Water Point – Montepuez', lat: -13.1256, lon: 39.0015 }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>waterPoints.forEach(p =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>L.marker([p.lat, p.lon]).addTo(map)</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.bindPopup(p.name);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Service Worker Registration</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -------------------------------</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if ('serviceWorker' in navigator) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>window.addEventListener('load', function () {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>navigator.serviceWorker.register('/sw.js')</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.then(() =&gt; console.log('Service Worker registered'))</p>
-<p class="p1"><span class="Apple-converted-space">          </span>.catch(err =&gt; console.error('Service Worker registration failed:', err));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Leaflet Map JS --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://unpkg.com/leaflet/dist/leaflet.js"&gt;&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+  <header>
+    <img class="logo" src="logo.png" alt="MajiSafe Mozambique Logo" />
+    <h1>MajiSafe Mozambique</h1>
+    <p>Disaster alerts, safe water & conservation tips</p>
+  </header>
+
+  <div class="container">
+    <!-- Home Screen -->
+    <div id="homeScreen" style="text-align:center;">
+      <div class="card">
+        <h2>Welcome to MajiSafe</h2>
+        <p>Check disaster risks or find the nearest drinkable water source.</p>
+        <button onclick="showForm()">Check Disaster Alerts</button>
+        <button class="btn-water" style="margin-top:0.7rem;" onclick="showWaterTips()">Ways to Conserve Water</button>
+        <button class="btn-water" style="margin-top:0.7rem;" onclick="showWaterMap()">Find Drinking Water</button>
+      </div>
+    </div>
+
+    <!-- Location Form -->
+    <div id="formScreen" style="display:none;">
+      <div class="card">
+        <label for="province">Province</label>
+        <select id="province">
+          <option value="">Select province</option>
+          <option value="Cabo Delgado">Cabo Delgado</option>
+          <option value="Nampula">Nampula</option>
+          <option value="Zambezia">Zambézia</option>
+          <option value="Sofala">Sofala</option>
+          <option value="Inhambane">Inhambane</option>
+          <option value="Gaza">Gaza</option>
+          <option value="Maputo">Maputo</option>
+        </select>
+
+        <label for="district">District / City</label>
+        <input type="text" id="district" placeholder="e.g. Beira, Pemba" />
+
+        <button onclick="checkRisk()">Check Risk</button>
+        <button class="btn-secondary" style="margin-top:0.5rem;" onclick="goHome()">Back</button>
+
+        <div id="alertBox" class="alert"></div>
+      </div>
+    </div>
+
+    <!-- Water Conservation Screen -->
+    <div id="waterScreen" style="display:none;">
+      <div class="card">
+        <h3>💧 Ways to Conserve Water</h3>
+        <ul>
+          <li>Fix leaking taps and pipes</li>
+          <li>Collect rainwater for cleaning and gardening</li>
+          <li>Turn off taps while brushing teeth</li>
+          <li>Use buckets instead of hoses</li>
+          <li>Reuse water from washing vegetables</li>
+          <li>Water plants early morning or evening</li>
+        </ul>
+        <button class="btn-secondary" onclick="goHome()">Back</button>
+      </div>
+    </div>
+
+    <!-- Water Map Screen -->
+    <div id="mapScreen" style="display:none;">
+      <div class="card">
+        <h3>🚰 Nearest Drinkable Water Sources</h3>
+        <p id="offlineText" style="display:none;">Offline mode: showing stored water points.</p>
+        <p>Showing sample water points (demo data).</p>
+        <div id="map"></div>
+        <button class="btn-secondary" onclick="goHome()">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 MajiSafe Mozambique | Offline-friendly
+  </footer>
+
+  <script>
+    // -------------------------------
+    // App Screens
+    // -------------------------------
+    function showForm() {
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('waterScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('formScreen').style.display = 'block';
+    }
+
+    function showWaterTips() {
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('formScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('waterScreen').style.display = 'block';
+    }
+
+    function showWaterMap() {
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('formScreen').style.display = 'none';
+      document.getElementById('waterScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'block';
+
+      if (!navigator.onLine) {
+        document.getElementById('offlineText').style.display = 'block';
+      } else {
+        document.getElementById('offlineText').style.display = 'none';
+      }
+
+      loadMap();
+
+      setTimeout(() => {
+        if (map) map.invalidateSize();
+      }, 200);
+    }
+
+    function goHome() {
+      document.getElementById('formScreen').style.display = 'none';
+      document.getElementById('waterScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('homeScreen').style.display = 'block';
+      if (document.getElementById('alertBox')) {
+        document.getElementById('alertBox').style.display = 'none';
+      }
+    }
+
+    // -------------------------------
+    // Disaster Alerts (ReliefWeb API)
+    // -------------------------------
+    const ALERT_STORAGE_KEY = 'majiSafe_alerts';
+
+    async function checkRisk() {
+      const province = document.getElementById('province').value;
+      const district = document.getElementById('district').value.trim();
+      const alertBox = document.getElementById('alertBox');
+
+      if (!province || !district) {
+        alert('Please enter your province and district');
+        return;
+      }
+
+      alertBox.style.display = 'block';
+      alertBox.className = 'alert warning';
+      alertBox.innerHTML = 'Checking live disaster alerts...';
+
+      try {
+        const events = await fetchReliefWebEvents(province, district);
+        const risk = evaluateRisk(events);
+
+        if (risk.level === 'danger') {
+          alertBox.className = 'alert danger';
+        } else if (risk.level === 'warning') {
+          alertBox.className = 'alert warning';
+        } else {
+          alertBox.className = 'alert safe';
+        }
+
+        alertBox.innerHTML = risk.message;
+
+        // Save for offline mode
+        localStorage.setItem(ALERT_STORAGE_KEY, JSON.stringify(events));
+
+        // Push notification for new alerts
+        if (risk.level !== 'safe') {
+          notifyUser(risk.message);
+        }
+
+      } catch (e) {
+        alertBox.className = 'alert warning';
+        alertBox.innerHTML = 'Unable to fetch live alerts. Showing cached data if available.';
+
+        const cached = localStorage.getItem(ALERT_STORAGE_KEY);
+        if (cached) {
+          const events = JSON.parse(cached);
+          const risk = evaluateRisk(events);
+          alertBox.innerHTML = risk.message;
+        }
+      }
+    }
+
+    async function fetchReliefWebEvents(province, district) {
+      const url = `https://api.reliefweb.int/v1/reports?appname=majiSafe&filter[field]=country&filter[value]=Mozambique&filter[field]=fields&filter[value]=title&filter[value]=description&limit=20&sort[]=date:desc`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+
+      // Filter locally by province/district keywords
+      const events = data.data || [];
+      const keyword = `${province} ${district}`.toLowerCase();
+
+      return events.filter(e => {
+        const title = (e.fields.title || '').toLowerCase();
+        const desc = (e.fields.description || '').toLowerCase();
+        return title.includes(keyword) || desc.includes(keyword);
+      });
+    }
+
+    function evaluateRisk(events) {
+      if (!events || events.length === 0) {
+        return { level: 'safe', message: '✅ SAFE: No active disaster alerts found for your location.' };
+      }
+
+      const eventNames = events.slice(0, 3).map(e => e.fields.title);
+      const message = `⚠️ ALERT: ${events.length} events found.\n\nTop alerts:\n- ${eventNames.join('\n- ')}`;
+
+      return { level: 'danger', message };
+    }
+
+    // -------------------------------
+    // Push Notifications
+    // -------------------------------
+    async function notifyUser(message) {
+      if (!("Notification" in window)) return;
+      if (Notification.permission === "granted") {
+        new Notification("MajiSafe Alert", { body: message });
+      } else if (Notification.permission !== "denied") {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          new Notification("MajiSafe Alert", { body: message });
+        }
+      }
+    }
+
+    // -------------------------------
+    // Leaflet Map
+    // -------------------------------
+    let map;
+    function loadMap() {
+      if (map) return;
+
+      map = L.map('map').setView([-18.6657, 35.5296], 6);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      const waterPoints = [
+        { name: 'Public Borehole – Beira', lat: -19.8436, lon: 34.8389 },
+        { name: 'Water Point – Nampula', lat: -15.1165, lon: 39.2666 },
+        { name: 'Community Well – Maputo', lat: -25.9692, lon: 32.5732 },
+        { name: 'Protected Well – Chimoio', lat: -19.1164, lon: 33.4835 },
+        { name: 'Public Tap – Tete', lat: -16.1564, lon: 33.5867 },
+        { name: 'Borehole – Quelimane', lat: -17.8786, lon: 36.8883 },
+        { name: 'Community Water Point – Pemba', lat: -12.9740, lon: 40.5178 },
+        { name: 'Protected Spring – Lichinga', lat: -13.3120, lon: 35.2406 },
+        { name: 'Water Kiosk – Xai-Xai', lat: -25.0519, lon: 33.6442 },
+        { name: 'Standpipe – Inhambane', lat: -23.8439, lon: 35.3838 },
+        { name: 'Village Well – Mocímboa da Praia', lat: -11.3552, lon: 40.2438 },
+        { name: 'Rural Borehole – Massinga', lat: -23.9010, lon: 35.8958 },
+        { name: 'Tap Stand – Nacala', lat: -14.5150, lon: 40.6808 },
+        { name: 'Hand Pump – Manica', lat: -19.4875, lon: 33.4500 },
+        { name: 'Protected Dug Well – Tete Rural', lat: -16.1700, lon: 33.6500 },
+        { name: 'Community Borehole – Angoche', lat: -16.2325, lon: 39.9086 },
+        { name: 'Public Well – Gurúè', lat: -15.0126, lon: 36.9951 },
+        { name: 'Standpipe – Dondo', lat: -19.6093, lon: 34.7436 },
+        { name: 'Village Borehole – Milange', lat: -16.0974, lon: 35.7680 },
+        { name: 'Water Point – Montepuez', lat: -13.1256, lon: 39.0015 }
+      ];
+
+      waterPoints.forEach(p => {
+        L.marker([p.lat, p.lon]).addTo(map)
+          .bindPopup(p.name);
+      });
+    }
+
+    // -------------------------------
+    // Service Worker Registration
+    // -------------------------------
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('Service Worker registered'))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </body>
 </html>
