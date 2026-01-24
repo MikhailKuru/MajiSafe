@@ -1,319 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MajiSafe Mozambique</title>
+<script>
+  // --- UI Navigation ---
+  function showForm() {
+    hideAllScreens();
+    document.getElementById('formScreen').style.display = 'block';
+  }
 
-  <!-- App Manifest -->
-  <link rel="manifest" href="manifest.json" />
+  function showWaterTips() {
+    hideAllScreens();
+    document.getElementById('waterScreen').style.display = 'block';
+  }
 
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      margin: 0;
-      background: linear-gradient(180deg, #eef4fb, #f9fbfd);
-      color: #333;
+  function showWaterMap() {
+    hideAllScreens();
+    document.getElementById('mapScreen').style.display = 'block';
+    loadMap();
+  }
+
+  function goHome() {
+    hideAllScreens();
+    document.getElementById('homeScreen').style.display = 'block';
+    const alertBox = document.getElementById('alertBox');
+    if (alertBox) alertBox.style.display = 'none';
+  }
+
+  function hideAllScreens() {
+    document.getElementById('homeScreen').style.display = 'none';
+    document.getElementById('formScreen').style.display = 'none';
+    document.getElementById('waterScreen').style.display = 'none';
+    document.getElementById('mapScreen').style.display = 'none';
+  }
+
+  // --- Risk Check ---
+  function checkRisk() {
+    const province = document.getElementById('province').value;
+    const district = document.getElementById('district').value.trim();
+    const alertBox = document.getElementById('alertBox');
+
+    if (!province || !district) {
+      alert('Please enter your province and district');
+      return;
     }
 
-    header {
-      background: linear-gradient(135deg, #0a4fa3, #0dcaf0);
-      color: white;
-      padding: 1.2rem 1rem;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    alertBox.style.display = 'block';
+
+    if (province === 'Sofala' || province === 'Zambezia') {
+      alertBox.className = 'alert danger';
+      alertBox.innerHTML = '⚠️ HIGH RISK: Flooding or cyclone risk in ' + district + '. Follow safety instructions.';
+    } else if (province === 'Cabo Delgado') {
+      alertBox.className = 'alert warning';
+      alertBox.innerHTML = '⚠️ WARNING: Possible storms or insecurity in ' + district + '. Stay alert.';
+    } else {
+      alertBox.className = 'alert safe';
+      alertBox.innerHTML = '✅ SAFE: No active disaster alerts for ' + district + ' right now.';
     }
 
-    .container {
-      padding: 1.2rem;
-      max-width: 680px;
-      margin: auto;
-    }
+    sendNotification('MajiSafe Alert', alertBox.innerText);
+  }
 
-    .logo {
-      width: 96px;
-      height: 96px;
-      margin: 0 auto 0.6rem;
-      display: block;
-      border-radius: 20px;
-      background: white;
-      padding: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
+  // --- Leaflet Map + Marker Cluster ---
+  let map;
+  let clusterGroup;
 
-    h1 {
-      margin: 0.2rem 0 0.1rem;
-      font-size: 1.6rem;
-      letter-spacing: 0.4px;
-    }
-
-    header p {
-      margin: 0.2rem 0 0.8rem;
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.92);
-    }
-
-    p {
-      margin: 0.2rem 0 0.8rem;
-      font-size: 0.95rem;
-      color: #333;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 1rem;
-    }
-
-    input,
-    select,
-    button {
-      width: 100%;
-      padding: 0.7rem;
-      margin-top: 0.5rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    button {
-      background: #0a4fa3;
-      color: white;
-      border: none;
-      margin-top: 1rem;
-      cursor: pointer;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-    }
-
-    button:hover {
-      background: #083b7a;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-secondary {
-      background: #6c757d;
-    }
-
-    .btn-water {
-      background: #0dcaf0;
-    }
-
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      margin-top: 1rem;
-    }
-
-    .alert {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      border-radius: 8px;
-      display: none;
-    }
-
-    .alert.safe {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .alert.warning {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .alert.danger {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    #map {
-      height: 320px;
-      margin-top: 1rem;
-      border-radius: 12px;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.85rem;
-      color: #555;
-      background: #eef2f6;
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 420px) {
-      .logo {
-        width: 84px;
-        height: 84px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-    }
-
-    /* Leaflet map styling (for offline compatibility) */
-    .leaflet-container {
-      border-radius: 12px;
-    }
-  </style>
-
-  <!-- Leaflet Map CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-</head>
-<body>
-
-  <header>
-    <img class="logo" src="logo.png" alt="MajiSafe Mozambique Logo" />
-    <h1>MajiSafe Mozambique</h1>
-    <p>Disaster alerts, safe water & conservation tips</p>
-  </header>
-
-  <div class="container">
-    <!-- Home Screen -->
-    <div id="homeScreen" style="text-align:center;">
-      <div class="card">
-        <h2>Welcome to MajiSafe</h2>
-        <p>Check disaster risks or find the nearest drinkable water source.</p>
-        <button onclick="showForm()">Check Disaster Alerts</button>
-        <button class="btn-water" style="margin-top:0.7rem;" onclick="showWaterTips()">Ways to Conserve Water</button>
-        <button class="btn-water" style="margin-top:0.7rem;" onclick="showWaterMap()">Find Drinking Water</button>
-      </div>
-    </div>
-
-    <!-- Location Form -->
-    <div id="formScreen" style="display:none;">
-      <div class="card">
-        <label for="province">Province</label>
-        <select id="province">
-          <option value="">Select province</option>
-          <option value="Cabo Delgado">Cabo Delgado</option>
-          <option value="Nampula">Nampula</option>
-          <option value="Zambezia">Zambézia</option>
-          <option value="Sofala">Sofala</option>
-          <option value="Inhambane">Inhambane</option>
-          <option value="Gaza">Gaza</option>
-          <option value="Maputo">Maputo</option>
-        </select>
-
-        <label for="district">District / City</label>
-        <input type="text" id="district" placeholder="e.g. Beira, Pemba" />
-
-        <button onclick="checkRisk()">Check Risk</button>
-        <button class="btn-secondary" style="margin-top:0.5rem;" onclick="goHome()">Back</button>
-
-        <div id="alertBox" class="alert"></div>
-      </div>
-    </div>
-
-    <!-- Water Conservation Screen -->
-    <div id="waterScreen" style="display:none;">
-      <div class="card">
-        <h3>Ways to Conserve Water</h3>
-        <ul>
-          <li>Fix leaking taps and pipes</li>
-          <li>Collect rainwater for cleaning and gardening</li>
-          <li>Turn off taps while brushing teeth</li>
-          <li>Use buckets instead of hoses</li>
-          <li>Reuse water from washing vegetables</li>
-          <li>Water plants early morning or evening</li>
-        </ul>
-        <button class="btn-secondary" onclick="goHome()">Back</button>
-      </div>
-    </div>
-
-    <!-- Water Map Screen -->
-    <div id="mapScreen" style="display:none;">
-      <div class="card">
-        <h3>Nearest Drinkable Water Sources</h3>
-        <p id="mapNote">Showing water points from your local dataset.</p>
-        <div id="map"></div>
-        <button class="btn-secondary" onclick="goHome()">Back</button>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2026 MajiSafe Mozambique | All rights reserved.
-  </footer>
-
-  <!-- Leaflet Map JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-
-  <script>
-    // --- UI Navigation ---
-    function showForm() {
-      hideAllScreens();
-      document.getElementById('formScreen').style.display = 'block';
-    }
-
-    function showWaterTips() {
-      hideAllScreens();
-      document.getElementById('waterScreen').style.display = 'block';
-    }
-
-    function showWaterMap() {
-      hideAllScreens();
-      document.getElementById('mapScreen').style.display = 'block';
-      loadMap();
-    }
-
-    function goHome() {
-      hideAllScreens();
-      document.getElementById('homeScreen').style.display = 'block';
-      const alertBox = document.getElementById('alertBox');
-      if (alertBox) alertBox.style.display = 'none';
-    }
-
-    function hideAllScreens() {
-      document.getElementById('homeScreen').style.display = 'none';
-      document.getElementById('formScreen').style.display = 'none';
-      document.getElementById('waterScreen').style.display = 'none';
-      document.getElementById('mapScreen').style.display = 'none';
-    }
-
-    // --- Risk Check (ReliefWeb placeholder logic) ---
-    function checkRisk() {
-      const province = document.getElementById('province').value;
-      const district = document.getElementById('district').value.trim();
-      const alertBox = document.getElementById('alertBox');
-
-      if (!province || !district) {
-        alert('Please enter your province and district');
-        return;
-      }
-
-      alertBox.style.display = 'block';
-
-      // Placeholder logic until ReliefWeb integration is added
-      if (province === 'Sofala' || province === 'Zambezia') {
-        alertBox.className = 'alert danger';
-        alertBox.innerHTML = '⚠️ HIGH RISK: Flooding or cyclone risk in ' + district + '. Follow safety instructions.';
-      } else if (province === 'Cabo Delgado') {
-        alertBox.className = 'alert warning';
-        alertBox.innerHTML = '⚠️ WARNING: Possible storms or insecurity in ' + district + '. Stay alert.';
-      } else {
-        alertBox.className = 'alert safe';
-        alertBox.innerHTML = '✅ SAFE: No active disaster alerts for ' + district + ' right now.';
-      }
-
-      // Send a notification (if allowed)
-      sendNotification('MajiSafe Alert', alertBox.innerText);
-    }
-
-    // --- Leaflet Map + Marker Cluster ---
-    let map;
-    let clusterGroup;
-
+  
      // --- Embedded Water Points ---
   const WATER_POINTS = [
   {
@@ -12706,65 +12454,57 @@
   }
 ];
 
-    function loadMap() {
-  if (map) {
-    map.invalidateSize();
-    return;
+  function loadMap() {
+    if (map) {
+      map.invalidateSize();
+      return;
+    }
+
+    map = L.map('map').setView([-18.6657, 35.5296], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    clusterGroup = L.markerClusterGroup();
+    map.addLayer(clusterGroup);
+
+    loadWaterPoints();
   }
 
-  map = L.map('map').setView([-18.6657, 35.5296], 6);
+  function loadWaterPoints() {
+    clusterGroup.clearLayers();
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+    WATER_POINTS.forEach(p => {
+      const marker = L.marker([p.lat_deg, p.lon_deg]);
+      marker.bindPopup('<b>Drinkable Water Source</b>');
+      clusterGroup.addLayer(marker);
+    });
+  }
 
-  clusterGroup = L.markerClusterGroup();
-  map.addLayer(clusterGroup);
+  // --- PWA / Service Worker Registration ---
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .catch(err => console.error('SW registration failed:', err));
+    });
+  }
 
-  loadWaterPoints();
-}
+  // --- Notifications ---
+  function sendNotification(title, message) {
+    if (!('Notification' in window)) return;
 
-   function loadWaterPoints() {
-  clusterGroup.clearLayers();
-
-  WATER_POINTS.forEach(p => {
-    const marker = L.marker([p.lat_deg, p.lon_deg]);
-    marker.bindPopup('<b>Drinkable Water Source</b>');
-    clusterGroup.addLayer(marker);
-  });
-}
-
-        })
-        .catch(err => {
-          document.getElementById('mapNote').innerText = 'Unable to load water points.';
-          console.error(err);
-        });
+    if (Notification.permission === 'granted') {
+      new Notification(title, { body: message });
+      return;
     }
 
-    // --- PWA / Service Worker Registration ---
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed:', err));
+    if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          new Notification(title, { body: message });
+        }
       });
     }
-
-    // --- Notifications ---
-    function sendNotification(title, message) {
-      if (!('Notification' in window)) return;
-
-      if (Notification.permission === 'granted') {
-        new Notification(title, { body: message });
-        return;
-      }
-
-      if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            new Notification(title, { body: message });
-          }
-        });
-      }
-    }
-  </script>
-</body>
-</html>
+  }
+</script>
