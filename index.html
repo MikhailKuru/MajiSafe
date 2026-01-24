@@ -341,19 +341,17 @@
           console.log('Loaded water points:', data.length, data[0]);
 
           data.forEach(p => {
-            const lat = p.#lat_deg || p.lat || p.latitude;
-            const lon = p.#lon_deg || p.lon || p.longitude;
+  const lat = p["#lat_deg"] ?? p.lat ?? p.latitude;
+  const lon = p["#lon_deg"] ?? p.lon ?? p.longitude;
 
-            if (!lat || !lon) return;
+  if (lat == null || lon == null) return;
 
-            const marker = L.marker([lat, lon]);
-            marker.bindPopup(`
-              <b>${p.water_source || p.type || 'Water source'}</b><br>
-              Status: ${p.status_id || p.status || 'Unknown'}
-            `);
+  const marker = L.marker([lat, lon]);
+  marker.bindPopup(`<b>Water source</b>`);
 
-            clusterGroup.addLayer(marker);
-          });
+  clusterGroup.addLayer(marker);
+});
+
         })
         .catch(err => {
           document.getElementById('mapNote').innerText = 'Unable to load water points.';
