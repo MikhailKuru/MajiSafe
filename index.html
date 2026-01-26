@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MajiSafe Mozambique</title>
 
-  <!-- App Manifest -->
-  <link rel="manifest" href="manifest.json" />
-
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -21,7 +18,7 @@
       color: white;
       padding: 1.2rem 1rem;
       text-align: center;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
     .container {
@@ -38,7 +35,7 @@
       border-radius: 20px;
       background: white;
       padding: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     h1 {
@@ -47,16 +44,14 @@
       letter-spacing: 0.4px;
     }
 
-    header p {
-      margin: 0.2rem 0 0.8rem;
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.92);
-    }
-
     p {
       margin: 0.2rem 0 0.8rem;
       font-size: 0.95rem;
       color: #333;
+    }
+
+    header p {
+      color: rgba(255,255,255,0.92);
     }
 
     label {
@@ -65,9 +60,7 @@
       margin-top: 1rem;
     }
 
-    input,
-    select,
-    button {
+    input, select, button {
       width: 100%;
       padding: 0.7rem;
       margin-top: 0.5rem;
@@ -84,14 +77,14 @@
       cursor: pointer;
       font-weight: 600;
       letter-spacing: 0.2px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
       transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
 
     button:hover {
       background: #083b7a;
       transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     .btn-secondary {
@@ -106,7 +99,7 @@
       background: white;
       border-radius: 12px;
       padding: 1rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       margin-top: 1rem;
     }
 
@@ -117,26 +110,11 @@
       display: none;
     }
 
-    .alert.safe {
-      background: #d4edda;
-      color: #155724;
-    }
+    .alert.safe { background: #d4edda; color: #155724; }
+    .alert.warning { background: #fff3cd; color: #856404; }
+    .alert.danger { background: #f8d7da; color: #721c24; }
 
-    .alert.warning {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .alert.danger {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    #map {
-      height: 320px;
-      margin-top: 1rem;
-      border-radius: 12px;
-    }
+    #map { height: 300px; margin-top: 1rem; border-radius: 12px; }
 
     footer {
       text-align: center;
@@ -148,26 +126,13 @@
     }
 
     @media (max-width: 420px) {
-      .logo {
-        width: 84px;
-        height: 84px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-      }
-    }
-
-    /* Leaflet map styling (for offline compatibility) */
-    .leaflet-container {
-      border-radius: 12px;
+      .logo { width: 84px; height: 84px; }
+      h1 { font-size: 1.4rem; }
     }
   </style>
 
   <!-- Leaflet Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 </head>
 <body>
 
@@ -217,7 +182,7 @@
     <!-- Water Conservation Screen -->
     <div id="waterScreen" style="display:none;">
       <div class="card">
-        <h3>Ways to Conserve Water</h3>
+        <h3>💧 Ways to Conserve Water</h3>
         <ul>
           <li>Fix leaking taps and pipes</li>
           <li>Collect rainwater for cleaning and gardening</li>
@@ -233,8 +198,9 @@
     <!-- Water Map Screen -->
     <div id="mapScreen" style="display:none;">
       <div class="card">
-        <h3>Nearest Drinkable Water Sources</h3>
-        <p id="mapNote">Showing water points from your local dataset.</p>
+        <h3>🚰 Nearest Drinkable Water Sources</h3>
+        <p id="offlineText" style="display:none;">Offline mode: showing stored water points.</p>
+        <p>Showing sample water points (demo data).</p>
         <div id="map"></div>
         <button class="btn-secondary" onclick="goHome()">Back</button>
       </div>
@@ -245,44 +211,59 @@
     &copy; 2026 MajiSafe Mozambique | Offline-friendly
   </footer>
 
-  <!-- Leaflet Map JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-
   <script>
-    // --- UI Navigation ---
+    // -------------------------------
+    // App Screens
+    // -------------------------------
     function showForm() {
-      hideAllScreens();
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('waterScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'none';
       document.getElementById('formScreen').style.display = 'block';
     }
 
     function showWaterTips() {
-      hideAllScreens();
+      document.getElementById('homeScreen').style.display = 'none';
+      document.getElementById('formScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'none';
       document.getElementById('waterScreen').style.display = 'block';
     }
 
     function showWaterMap() {
-      hideAllScreens();
-      document.getElementById('mapScreen').style.display = 'block';
-      loadMap();
-    }
-
-    function goHome() {
-      hideAllScreens();
-      document.getElementById('homeScreen').style.display = 'block';
-      const alertBox = document.getElementById('alertBox');
-      if (alertBox) alertBox.style.display = 'none';
-    }
-
-    function hideAllScreens() {
       document.getElementById('homeScreen').style.display = 'none';
       document.getElementById('formScreen').style.display = 'none';
       document.getElementById('waterScreen').style.display = 'none';
-      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'block';
+
+      if (!navigator.onLine) {
+        document.getElementById('offlineText').style.display = 'block';
+      } else {
+        document.getElementById('offlineText').style.display = 'none';
+      }
+
+      loadMap();
+
+      setTimeout(() => {
+        if (map) map.invalidateSize();
+      }, 200);
     }
 
-    // --- Risk Check (ReliefWeb placeholder logic) ---
-    function checkRisk() {
+    function goHome() {
+      document.getElementById('formScreen').style.display = 'none';
+      document.getElementById('waterScreen').style.display = 'none';
+      document.getElementById('mapScreen').style.display = 'none';
+      document.getElementById('homeScreen').style.display = 'block';
+      if (document.getElementById('alertBox')) {
+        document.getElementById('alertBox').style.display = 'none';
+      }
+    }
+
+    // -------------------------------
+    // Disaster Alerts (ReliefWeb API)
+    // -------------------------------
+    const ALERT_STORAGE_KEY = 'majiSafe_alerts';
+
+    async function checkRisk() {
       const province = document.getElementById('province').value;
       const district = document.getElementById('district').value.trim();
       const alertBox = document.getElementById('alertBox');
@@ -293,32 +274,93 @@
       }
 
       alertBox.style.display = 'block';
+      alertBox.className = 'alert warning';
+      alertBox.innerHTML = 'Checking live disaster alerts...';
 
-      // Placeholder logic until ReliefWeb integration is added
-      if (province === 'Sofala' || province === 'Zambezia') {
-        alertBox.className = 'alert danger';
-        alertBox.innerHTML = '⚠️ HIGH RISK: Flooding or cyclone risk in ' + district + '. Follow safety instructions.';
-      } else if (province === 'Cabo Delgado') {
+      try {
+        const events = await fetchReliefWebEvents(province, district);
+        const risk = evaluateRisk(events);
+
+        if (risk.level === 'danger') {
+          alertBox.className = 'alert danger';
+        } else if (risk.level === 'warning') {
+          alertBox.className = 'alert warning';
+        } else {
+          alertBox.className = 'alert safe';
+        }
+
+        alertBox.innerHTML = risk.message;
+
+        // Save for offline mode
+        localStorage.setItem(ALERT_STORAGE_KEY, JSON.stringify(events));
+
+        // Push notification for new alerts
+        if (risk.level !== 'safe') {
+          notifyUser(risk.message);
+        }
+
+      } catch (e) {
         alertBox.className = 'alert warning';
-        alertBox.innerHTML = '⚠️ WARNING: Possible storms or insecurity in ' + district + '. Stay alert.';
-      } else {
-        alertBox.className = 'alert safe';
-        alertBox.innerHTML = '✅ SAFE: No active disaster alerts for ' + district + ' right now.';
-      }
+        alertBox.innerHTML = 'Unable to fetch live alerts. Showing cached data if available.';
 
-      // Send a notification (if allowed)
-      sendNotification('MajiSafe Alert', alertBox.innerText);
+        const cached = localStorage.getItem(ALERT_STORAGE_KEY);
+        if (cached) {
+          const events = JSON.parse(cached);
+          const risk = evaluateRisk(events);
+          alertBox.innerHTML = risk.message;
+        }
+      }
     }
 
-    // --- Leaflet Map + Marker Cluster ---
-    let map;
-    let clusterGroup;
+    async function fetchReliefWebEvents(province, district) {
+      const url = `https://api.reliefweb.int/v1/reports?appname=majiSafe&filter[field]=country&filter[value]=Mozambique&filter[field]=fields&filter[value]=title&filter[value]=description&limit=20&sort[]=date:desc`;
 
-    function loadMap() {
-      if (map) {
-        map.invalidateSize();
-        return;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      // Filter locally by province/district keywords
+      const events = data.data || [];
+      const keyword = `${province} ${district}`.toLowerCase();
+
+      return events.filter(e => {
+        const title = (e.fields.title || '').toLowerCase();
+        const desc = (e.fields.description || '').toLowerCase();
+        return title.includes(keyword) || desc.includes(keyword);
+      });
+    }
+
+    function evaluateRisk(events) {
+      if (!events || events.length === 0) {
+        return { level: 'safe', message: '✅ SAFE: No active disaster alerts found for your location.' };
       }
+
+      const eventNames = events.slice(0, 3).map(e => e.fields.title);
+      const message = `⚠️ ALERT: ${events.length} events found.\n\nTop alerts:\n- ${eventNames.join('\n- ')}`;
+
+      return { level: 'danger', message };
+    }
+
+    // -------------------------------
+    // Push Notifications
+    // -------------------------------
+    async function notifyUser(message) {
+      if (!("Notification" in window)) return;
+      if (Notification.permission === "granted") {
+        new Notification("MajiSafe Alert", { body: message });
+      } else if (Notification.permission !== "denied") {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          new Notification("MajiSafe Alert", { body: message });
+        }
+      }
+    }
+
+    // -------------------------------
+    // Leaflet Map
+    // -------------------------------
+    let map;
+    function loadMap() {
+      if (map) return;
 
       map = L.map('map').setView([-18.6657, 35.5296], 6);
 
@@ -326,60 +368,48 @@
         attribution: '© OpenStreetMap contributors'
       }).addTo(map);
 
-      clusterGroup = L.markerClusterGroup();
-      map.addLayer(clusterGroup);
+      const waterPoints = [
+        { name: 'Public Borehole – Beira', lat: -19.8436, lon: 34.8389 },
+        { name: 'Water Point – Nampula', lat: -15.1165, lon: 39.2666 },
+        { name: 'Community Well – Maputo', lat: -25.9692, lon: 32.5732 },
+        { name: 'Protected Well – Chimoio', lat: -19.1164, lon: 33.4835 },
+        { name: 'Public Tap – Tete', lat: -16.1564, lon: 33.5867 },
+        { name: 'Borehole – Quelimane', lat: -17.8786, lon: 36.8883 },
+        { name: 'Community Water Point – Pemba', lat: -12.9740, lon: 40.5178 },
+        { name: 'Protected Spring – Lichinga', lat: -13.3120, lon: 35.2406 },
+        { name: 'Water Kiosk – Xai-Xai', lat: -25.0519, lon: 33.6442 },
+        { name: 'Standpipe – Inhambane', lat: -23.8439, lon: 35.3838 },
+        { name: 'Village Well – Mocímboa da Praia', lat: -11.3552, lon: 40.2438 },
+        { name: 'Rural Borehole – Massinga', lat: -23.9010, lon: 35.8958 },
+        { name: 'Tap Stand – Nacala', lat: -14.5150, lon: 40.6808 },
+        { name: 'Hand Pump – Manica', lat: -19.4875, lon: 33.4500 },
+        { name: 'Protected Dug Well – Tete Rural', lat: -16.1700, lon: 33.6500 },
+        { name: 'Community Borehole – Angoche', lat: -16.2325, lon: 39.9086 },
+        { name: 'Public Well – Gurúè', lat: -15.0126, lon: 36.9951 },
+        { name: 'Standpipe – Dondo', lat: -19.6093, lon: 34.7436 },
+        { name: 'Village Borehole – Milange', lat: -16.0974, lon: 35.7680 },
+        { name: 'Water Point – Montepuez', lat: -13.1256, lon: 39.0015 }
+      ];
 
-      loadWaterPointsFromFile();
-    }
-
-    function loadWaterPointsFromFile() {
-      fetch('waterpoints.json')
-        .then(res => res.json())
-        .then(data => {
-          clusterGroup.clearLayers();
-
-          data.forEach(p => {
-            if (!p.lat_deg || !p.lon_deg) return;
-
-            const marker = L.marker([p.lat_deg, p.lon_deg]);
-            marker.bindPopup(`
-              <b>${p.water_source || 'Water Point'}</b><br>
-              Status: ${p.status_id || 'Unknown'}
-            `);
-
-            clusterGroup.addLayer(marker);
-          });
-        })
-        .catch(err => {
-          document.getElementById('mapNote').innerText = 'Unable to load water points. Please check your file or internet connection.';
-          console.error(err);
-        });
-    }
-
-    // --- PWA / Service Worker Registration ---
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => console.error('SW registration failed:', err));
+      waterPoints.forEach(p => {
+        L.marker([p.lat, p.lon]).addTo(map)
+          .bindPopup(p.name);
       });
     }
 
-    // --- Notifications ---
-    function sendNotification(title, message) {
-      if (!('Notification' in window)) return;
-
-      if (Notification.permission === 'granted') {
-        new Notification(title, { body: message });
-        return;
-      }
-
-      if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            new Notification(title, { body: message });
-          }
-        });
-      }
+    // -------------------------------
+    // Service Worker Registration
+    // -------------------------------
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('Service Worker registered'))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
     }
   </script>
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </body>
 </html>
